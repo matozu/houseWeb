@@ -11,7 +11,7 @@
         name="form-text"
         v-model="text"
         class="form-text"
-        cols="30"
+        cols="25"
         rows="10"
       ></textarea>
 
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -35,7 +35,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(["addToSchedule"]),
+    ...mapActions(["addToSchedule"]),
     save(e) {
       if (this.text != "") {
         this.addToSchedule({ date: this.date, text: this.text });
@@ -49,13 +49,11 @@ export default {
 
 <style scoped lang="scss">
 .input {
-  width: 300px;
+  width: 250px;
   background: rgb(100, 149, 237, 0.7);
   padding: 15px;
   text-align: center;
-  position: absolute;
-  top: 50px;
-  margin: 10px auto;
+  transition: all 0.5s ease-out;
 
   .form-date {
     margin-bottom: 10px;

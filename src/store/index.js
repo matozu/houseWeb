@@ -1,26 +1,41 @@
 import { createStore } from "vuex";
+import axios from "axios";
 
 export default createStore({
-    state: {
-        schedule: [
-            {
-                // month + 1, start with 0
-                date: new Date(2022, 6, 3), 
-                text: 'text for this day'
-            },
-            {
-                date: new Date(2022, 11, 31), 
-                text: 'text for this day'
-            }]
+  state: {
+    schedule: [],
+  },
+  getters: {
+    getSchedule: (state) => {
+      return state.schedule;
     },
-    getters: {
-        getSchedule: state => {
-            return state.schedule
-        }
-    }, 
-    mutations: {
-        addToSchedule(state, item) {
-            state.schedule.push(item)
-        }
-    }
-})
+  },
+  actions: {
+    async fetchSchedule({ commit }) {
+      try {
+        const result = await axios.get("http://localhost:5000/api/schedule");
+        commit("addSchedule", result.data);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async addToSchedule({ commit }, day) {
+      try {
+        const res = await axios.post("http://localhost:5000/api/schedule", day);
+      } catch (e) {
+        console.log(e);
+      }
+      commit("addDayToState", day);
+    },
+  },
+  mutations: {
+    addDayToState(state, item) {
+      state.schedule.push(item);
+    },
+    addSchedule(state, schedule) {
+      schedule.map((s) => {
+        state.schedule.push({ date: new Date(s.date), text: s.tex });
+      });
+    },
+  },
+});

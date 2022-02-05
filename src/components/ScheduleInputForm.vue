@@ -1,5 +1,5 @@
 <template>
-  <div class="input">
+  <div class="input" id="if" ref="if">
     <form action="">
       <div v-if="date" class="form-date">
         {{ String(date.getDate()).padStart(2, "0") }}
@@ -50,10 +50,14 @@ export default {
 <style scoped lang="scss">
 .input {
   width: 250px;
-  background: rgb(100, 149, 237, 0.7);
+  background: rgb(222, 184, 135);
   padding: 15px;
   text-align: center;
   transition: all 0.5s ease-out;
+  margin-top: 20px;
+  margin-bottom: 100px;
+  border-radius: 8px;
+  z-index: 1;
 
   .form-date {
     margin-bottom: 10px;

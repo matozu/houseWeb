@@ -131,7 +131,7 @@ export default {
 <style lang="scss" scoped>
 .card {
   position: relative;
-  width: 300px;
+  // width: 300px;
   border: 1px solid gray;
   border-radius: 5px;
   margin: 30px auto;

@@ -24,9 +24,7 @@ export default {
     };
   },
   props: {
-    date: {
-      type: Date,
-    },
+    date: Date,
   },
   methods: {
     ...mapActions(["addToSchedule"]),

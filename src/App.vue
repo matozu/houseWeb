@@ -45,6 +45,7 @@ export default {
       this.setUsername(username);
       axios.defaults.headers.post["x-auth-token"] = token;
       axios.defaults.headers.delete["x-auth-token"] = token;
+      axios.defaults.headers.put["x-auth-token"] = token;
     }
   },
 };
@@ -110,7 +111,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 300px;
+  // width: 300px;
 }
 
 .schedule-container {

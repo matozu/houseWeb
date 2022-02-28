@@ -39,8 +39,10 @@ export default {
   width: 100%;
   margin-top: 10px;
   text-align: left;
+  transition: all 0.5s ease-in-out;
 
   table {
+    transition: all 0.5s ease-in-out;
     width: calc(100% + 15px);
     margin-left: -5px;
     margin-top: 10px;

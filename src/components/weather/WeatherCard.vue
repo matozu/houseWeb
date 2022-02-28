@@ -137,6 +137,7 @@ export default {
   margin: 30px auto;
   padding: 20px;
   background: rgb(220, 220, 220, 0.6);
+  transition: all 0.5s ease-in-out;
 }
 
 .header-left {

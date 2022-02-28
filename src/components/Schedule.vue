@@ -4,11 +4,6 @@
       :text="show ? 'Hide Schedule' : 'Show Schedule'"
       @click="show = !show"
     />
-
-    <div :class="['show-btn', { 'hide-btn': show }]" @click="show = !show">
-      <!-- {{ show ? "Hide Schedule" : "Show Schedule" }} -->
-    </div>
-
     <div :class="['notes', { 'notes-show': show }]">
       <div class="day" v-for="(day, index) in getSchedule">
         <div class="day-date">
@@ -21,19 +16,31 @@
             <span class="note-username">{{ note.username }} :</span>
             <span class="note-icons">
               <i
-                @click="editInSchedule(note.id)"
-                v-if="getUsername === note.username"
+                @click="save(note._id)"
+                v-if="getUsername === note.username && editableId === note._id"
+                class="fa fa-save"
+              ></i>
+
+              <i
+                @click="cancel(note._id)"
+                v-if="getUsername === note.username && editableId === note._id"
+                class="fa fa-times"
+              ></i>
+
+              <i
+                @click="editInSchedule(note._id)"
+                v-if="getUsername === note.username && editableId != note._id"
                 class="fa fa-edit"
               ></i>
               <i
-                @click="deleteFromSchedule(note.id)"
+                @click="deleteFromSchedule(note._id)"
                 v-if="getUsername === note.username"
                 class="fa fa-trash"
               ></i>
             </span>
           </div>
-          <span class="note-text">
-            {{ note.text }}
+          <span class="note-text" :id="note._id">
+            {{ note.text.replace(/&nbsp;/g, " ") }}
           </span>
         </div>
       </div>
@@ -52,16 +59,47 @@ export default {
   data() {
     return {
       show: false,
+      editableId: null,
+      oldText: "",
     };
   },
   computed: {
     ...mapGetters(["getSchedule", "getUsername"]),
   },
   methods: {
-    ...mapActions(["deleteFromSchedule"]),
+    ...mapActions(["deleteFromSchedule", "editNote"]),
+    editInSchedule(id) {
+      const el = document.getElementById(id);
+      el.contentEditable = true;
+      el.classList.add("note-text-edit");
+      this.editableId = id;
+      this.oldText = el.innerHTML;
+    },
+    save(id) {
+      const el = document.getElementById(id);
+      const newText = el.innerHTML.replace(/\u00a0/g, " ");
+      el.contentEditable = false;
+      el.classList.remove("note-text-edit");
+      this.editableId = null;
+      this.oldText = "";
+      try {
+        this.editNote({ id: id, text: newText });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    cancel(id) {
+      const el = document.getElementById(id);
+      el.innerHTML = this.oldText;
+      el.contentEditable = false;
+      el.classList.remove("note-text-edit");
+      this.editableId = null;
+      this.oldText = "";
+    },
   },
 };
 </script>
+
 
 <style scoped lang="scss">
 .schedule {
@@ -73,14 +111,18 @@ export default {
 }
 
 .notes {
+  border: 1px solid white;
+  position: relative;
   width: 100%;
-  height: 90%;
+  max-height: 90%;
+  padding-left: 10px;
+  padding-right: 10px;
   overflow: auto;
   -ms-overflow-style: none;
   scrollbar-width: none;
   scroll-behavior: smooth;
   margin-right: 20px;
-  margin-top: 80px;
+  margin-top: 55px;
   transition: all 0.5s ease-in-out;
   transform: scale(0);
 }
@@ -117,12 +159,17 @@ export default {
   .note-icons {
     i {
       margin: 0 5px;
+      cursor: pointer;
     }
   }
 }
 
 .note-text {
   word-break: break-all;
+}
+
+.note-text-edit {
+  background: gainsboro;
 }
 
 .day-date {

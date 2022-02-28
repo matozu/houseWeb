@@ -3,8 +3,8 @@
     <div
       :class="['date-picker-container', { 'date-picker-show': showCalendar }]"
     >
-      <div class="date-picker-close" @click="showCalendar = false"></div>
-      <DatePicker v-model="date" class="date-picker" />
+      <!-- <div class="date-picker-close" @click="showCalendar = false"></div> -->
+      <DatePicker v-model="date" class="date-picker" color="blue" is-dark />
     </div>
 
     <button-glow
@@ -23,7 +23,7 @@
 import { DatePicker } from "v-calendar";
 import ButtonGlow from "../ButtonGlow.vue";
 import ScheduleInputForm from "./ScheduleInputForm.vue";
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 export default {
   components: {
     DatePicker,

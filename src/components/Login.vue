@@ -1,23 +1,23 @@
 <template>
   <div class="login">
-    <form action="" v-show="getUsername === ''">
+    <form @submit="loginForm" v-show="getUsername === ''">
       <input
         type="text"
         name="username"
+        id="username"
+        required
         v-model="username"
         placeholder="username"
       />
       <input
         type="text"
         name="password"
+        id="password"
+        required
         v-model="password"
         placeholder="password"
       />
-      <button
-        @click.prevent="login({ username: username, password: password })"
-      >
-        log in
-      </button>
+      <button type="submit">log in</button>
     </form>
     <div class="user" v-show="getUsername != ''">
       <p>{{ getUsername }}</p>
@@ -33,8 +33,8 @@ export default {
   name: "Login",
   data() {
     return {
-      username: "",
-      password: "",
+      username: "user",
+      password: "user",
     };
   },
   computed: {
@@ -42,6 +42,19 @@ export default {
   },
   methods: {
     ...mapActions(["login", "logout"]),
+    async loginForm(e) {
+      e.preventDefault();
+      const usernameInput = document.getElementById("username");
+      const passwordInput = document.getElementById("password");
+      try {
+        await this.login({ username: this.username, password: this.password });
+      } catch (e) {
+        usernameInput.setCustomValidity(e.request.response);
+        usernameInput.reportValidity();
+        usernameInput.setCustomValidity("");
+        passwordInput.setCustomValidity("");
+      }
+    },
   },
 };
 </script>
@@ -59,6 +72,10 @@ export default {
     width: 315px;
     justify-content: right;
     gap: 10px;
+
+    input {
+      width: 145px;
+    }
   }
 
   .user {

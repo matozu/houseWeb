@@ -9,11 +9,6 @@ export default {
   props: {
     text: String,
   },
-  methods: {
-    clicked(v) {
-      console.log(v);
-    },
-  },
 };
 </script>
 

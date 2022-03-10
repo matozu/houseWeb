@@ -1,0 +1,89 @@
+{
+  "mato": [
+    {
+      "_id": "6223b05725aa18a00e1b5d64",
+      "date": "2022-03-05T18:47:51.587Z",
+      "text": "user to mato",
+      "to": "mato",
+      "from": "user",
+      "read": false,
+      "__v": 0
+    },
+    {
+      "_id": "621d402351513fd8f8ef4b52",
+      "date": "2022-03-08T23:00:00.000Z",
+      "text": "mato to user",
+      "to": "user",
+      "from": "mato",
+      "read": false,
+      "__v": 0
+    },
+    {
+      "_id": "621d405a51513fd8f8ef4b56",
+      "date": "2022-03-08T23:00:00.000Z",
+      "text": "user to mato",
+      "to": "mato",
+      "from": "user",
+      "read": false,
+      "__v": 0
+    }
+  ],
+  "ivan": [
+    {
+      "_id": "6225d91b152ea855c684e3ea",
+      "date": "2022-03-07T10:06:19.189Z",
+      "text": "user to ivan",
+      "to": "ivan",
+      "from": "user",
+      "read": false,
+      "__v": 0
+    },
+    {
+      "_id": "6225d973152ea855c684e3ee",
+      "date": "2022-03-07T10:07:47.494Z",
+      "text": "user to ivan",
+      "to": "ivan",
+      "from": "user",
+      "read": false,
+      "__v": 0
+    },
+    {
+      "_id": "6225d974152ea855c684e3f0",
+      "date": "2022-03-07T10:07:48.124Z",
+      "text": "ivan to user",
+      "to": "user",
+      "from": "ivan",
+      "read": false,
+      "__v": 0
+    }
+  ],
+  "žarko": [
+    {
+      "_id": "6225d96c152ea855c684e3ec",
+      "date": "2022-03-07T10:07:40.085Z",
+      "text": "user to žarko",
+      "to": "žarko",
+      "from": "user",
+      "read": false,
+      "__v": 0
+    },
+    {
+      "_id": "6225d974152ea855c684e3f2",
+      "date": "2022-03-07T10:07:48.761Z",
+      "text": "user to žarko",
+      "to": "žarko",
+      "from": "user",
+      "read": false,
+      "__v": 0
+    },
+    {
+      "_id": "6225e52d152ea855c684e404",
+      "date": "2022-03-07T10:57:49.721Z",
+      "text": "Žarko to user",
+      "to": "user",
+      "from": "žarko",
+      "read": false,
+      "__v": 0
+    }
+  ]
+}

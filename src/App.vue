@@ -15,16 +15,20 @@
         <Schedule />
       </div>
     </div>
+    <messages />
+    <chat />
   </div>
 </template>
 
 <script>
+import Chat from "./components/messages/Chat.vue";
 import WeatherCard from "./components/weather/WeatherCard.vue";
 import Schedule from "./components/Schedule.vue";
 import DatePicker from "./components/calendar/DatePicker.vue";
 import { mapActions, mapMutations } from "vuex";
 import axios from "axios";
 import Login from "./components/Login.vue";
+import Messages from "./components/messages/Messages.vue";
 
 export default {
   components: {
@@ -32,6 +36,8 @@ export default {
     DatePicker,
     Schedule,
     Login,
+    Messages,
+    Chat,
   },
   methods: {
     ...mapActions(["fetchSchedule"]),

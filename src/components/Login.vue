@@ -20,14 +20,14 @@
       <button type="submit">log in</button>
     </form>
     <div class="user" v-show="getUsername != ''">
-      <p>{{ getUsername }}</p>
+      <p @click="setShowMessages(true)">{{ getUsername }}</p>
       <button @click="logout">Log Out</button>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 import axios from "axios";
 export default {
   name: "Login",
@@ -42,6 +42,7 @@ export default {
   },
   methods: {
     ...mapActions(["login", "logout"]),
+    ...mapMutations(["setShowMessages"]),
     async loginForm(e) {
       e.preventDefault();
       const usernameInput = document.getElementById("username");
@@ -89,6 +90,7 @@ export default {
     p {
       background-color: rgb(0, 0, 0, 0.5);
       padding: 3px;
+      cursor: pointer;
     }
   }
 }

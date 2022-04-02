@@ -13,12 +13,25 @@ socketIO.on("connect_error", (error) => {
   console.log(error.message);
 });
 
-socketIO.on("messages", (messages) => {
-  store.commit("addMessages", groupMessages(messages, store.state.username));
+socketIO.on("connected", (data) => {
+  store.commit(
+    "addMessages",
+    groupMessages(data.messages, store.state.username)
+  );
+  store.commit("addUsers", data.users);
 });
 
 socketIO.on("message", (message) => {
   store.commit("addMessage", message);
+});
+
+socketIO.on("newUserConnected", (username) => {
+  store.commit("updateUserStatus", { username: username, status: true });
+});
+
+socketIO.on("disconnected", (username) => {
+  store.commit("updateUserStatus", { username: username, status: false });
+  console.log(username + " disconnected");
 });
 
 export default socketIO;

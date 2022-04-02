@@ -2,49 +2,51 @@
   <div class="container">
     <login></login>
     <div class="showcase">
-      <div class="datepicker-container">
-        <date-picker />
-      </div>
-      <div class="weather-container">
-        <div class="welcome">
-          <h1>house web</h1>
-        </div>
-        <WeatherCard />
-      </div>
-      <div class="schedule-container">
-        <Schedule />
-      </div>
+      <h1>house web</h1>
+      <WeatherCard />
+      <a href="#schedule"><div class="scroll-to-schedule-icon"></div></a>
+      <users />
     </div>
     <messages />
     <chat />
+    <schedule />
+    <image-gallery />
+    <div class="footer">
+      Copyright &copy; 2022 by mato
+      <br />
+      All rights reserved
+    </div>
   </div>
 </template>
 
 <script>
-import Chat from "./components/messages/Chat.vue";
-import WeatherCard from "./components/weather/WeatherCard.vue";
-import Schedule from "./components/Schedule.vue";
-import DatePicker from "./components/calendar/DatePicker.vue";
 import { mapActions, mapMutations } from "vuex";
 import axios from "axios";
 import Login from "./components/Login.vue";
+import WeatherCard from "./components/weather/WeatherCard.vue";
 import Messages from "./components/messages/Messages.vue";
+import Chat from "./components/messages/Chat.vue";
+import Users from "./components/Users.vue";
+import Schedule from "./components/Schedule.vue";
+import ImageGallery from "./components/images/ImageGallery.vue";
 
 export default {
   components: {
     WeatherCard,
-    DatePicker,
-    Schedule,
     Login,
     Messages,
     Chat,
+    Users,
+    Schedule,
+    ImageGallery,
   },
   methods: {
-    ...mapActions(["fetchSchedule"]),
+    ...mapActions(["fetchSchedule", "fetchImages"]),
     ...mapMutations(["setUsername"]),
   },
   created() {
     this.fetchSchedule();
+    this.fetchImages();
     const token = localStorage.getItem("x-auth-token");
     const username = localStorage.getItem("username");
     if (token && username) {
@@ -79,14 +81,13 @@ body {
 }
 
 .container {
-  // border: 1px solid black;
   padding: 10px;
   position: relative;
   width: 100vw;
   height: 100vh;
   margin: auto;
   background-color: aqua;
-  background-image: url("img/bck.jpg");
+  background-image: url("assets/img/2.jpg");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -96,46 +97,33 @@ body {
   width: 100%;
   height: 100%;
   display: flex;
-  // justify-content: space-between;
-}
-
-.datepicker-container {
-  // border: 1px solid black;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  align-items: flex-end;
-  justify-content: center;
-  width: 33%;
-  flex: 1 1 auto;
-}
-
-.weather-container {
-  // border: 1px solid black;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  // width: 300px;
-}
-
-.schedule-container {
-  // border: 1px solid black;
-  display: flex;
-  justify-content: center;
-  height: 100%;
-  width: 33%;
-  align-items: flex-start;
-  flex: 1 1 auto;
-}
-
-.welcome {
-  text-align: center;
+  flex-direction: column;
 
   h1 {
     color: whitesmoke;
     text-shadow: 1px 1px 1px black;
   }
+}
+
+.scroll-to-schedule-icon {
+  height: 50px;
+  width: 50px;
+  border-style: solid;
+  border-color: whitesmoke;
+  border-width: 0px 5px 5px 0px;
+  transform: rotate(45deg);
+}
+
+.scroll-to-schedule-icon:hover {
+  border-bottom-width: 4px;
+  border-right-width: 4px;
+}
+
+.footer {
+  text-align: center;
+  line-height: 2em;
+  margin-top: 20px;
 }
 </style>

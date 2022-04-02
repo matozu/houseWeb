@@ -1,28 +1,59 @@
 <template>
-  <div class="login">
-    <form @submit="loginForm" v-show="getUsername === ''">
+  <div :class="{ login: true, loginHide: !showLoginInput }">
+    <form @submit="loginFormSubmit" v-show="username === ''">
       <input
         type="text"
         name="username"
         id="username"
         required
-        v-model="username"
+        v-model="inputUsername"
         placeholder="username"
       />
       <input
-        type="text"
+        type="password"
         name="password"
         id="password"
         required
-        v-model="password"
+        v-model="inputPassword"
         placeholder="password"
       />
-      <button type="submit">log in</button>
+      <button v-if="showLoginInput" type="submit">login</button>
+      <button
+        v-else
+        class="show-login-btn desktop"
+        @click="showLoginInput = true"
+      >
+        login
+      </button>
     </form>
-    <div class="user" v-show="getUsername != ''">
-      <p @click="setShowMessages(true)">{{ getUsername }}</p>
-      <button @click="logout">Log Out</button>
-    </div>
+    <button
+      class="close"
+      v-if="showLoginInput && username === ''"
+      @click="showLoginInput = false"
+    >
+      <span class="fa fa-times"></span>
+    </button>
+  </div>
+  <button
+    class="show-login-btn mobile"
+    v-if="!showLoginInput && username === ''"
+    @click="showLoginInput = true"
+  >
+    login
+  </button>
+
+  <div class="user" v-show="username != ''">
+    <p @click="setShowMessages(true)">{{ username }}</p>
+    <button
+      @click="
+        {
+          logout();
+          showLoginInput = false;
+        }
+      "
+    >
+      Log Out
+    </button>
   </div>
 </template>
 
@@ -33,28 +64,59 @@ export default {
   name: "Login",
   data() {
     return {
-      username: "user",
-      password: "user",
+      inputUsername: "",
+      inputPassword: "",
+      showLoginInput: false,
     };
   },
   computed: {
-    ...mapGetters(["getUsername"]),
+    ...mapGetters(["username"]),
+  },
+  watch: {
+    showLoginInput(newValue) {
+      if (newValue && window.innerWidth <= 500) {
+        this.preventScrolling();
+      } else {
+        this.enableScrolling();
+      }
+    },
   },
   methods: {
     ...mapActions(["login", "logout"]),
     ...mapMutations(["setShowMessages"]),
-    async loginForm(e) {
+    async loginFormSubmit(e) {
       e.preventDefault();
-      const usernameInput = document.getElementById("username");
-      const passwordInput = document.getElementById("password");
+      const usernameInputField = document.getElementById("username");
+      const passwordInputField = document.getElementById("password");
       try {
-        await this.login({ username: this.username, password: this.password });
+        await this.login({
+          username: this.inputUsername,
+          password: this.inputPassword,
+        });
+        this.inputUsername = "";
+        this.inputPassword = "";
+        this.showLoginInput = false;
       } catch (e) {
-        usernameInput.setCustomValidity(e.request.response);
-        usernameInput.reportValidity();
-        usernameInput.setCustomValidity("");
-        passwordInput.setCustomValidity("");
+        usernameInputField.setCustomValidity(e.request.response);
+        usernameInputField.reportValidity();
+        usernameInputField.setCustomValidity("");
+        passwordInputField.setCustomValidity("");
       }
+    },
+    preventScroll(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    },
+    preventScrolling() {
+      document
+        .getElementsByTagName("BODY")[0]
+        .addEventListener("wheel", this.preventScroll, { passive: false });
+    },
+    enableScrolling() {
+      document
+        .getElementsByTagName("BODY")[0]
+        .removeEventListener("wheel", this.preventScroll);
     },
   },
 };
@@ -62,10 +124,11 @@ export default {
 
 <style lang="scss" scoped>
 .login {
-  // border: 1px solid white;
   position: absolute;
   top: 10px;
   right: 20px;
+  transition: all 0.5s ease-in-out;
+  z-index: 1;
 
   form {
     display: flex;
@@ -79,19 +142,132 @@ export default {
     }
   }
 
-  .user {
-    display: flex;
-    justify-content: right;
-    gap: 10px;
-    width: 200px;
-    color: white;
-    font-weight: bold;
+  .close {
+    background: none;
+    color: whitesmoke;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    top: 31px;
+    right: 55px;
+  }
+}
 
-    p {
-      background-color: rgb(0, 0, 0, 0.5);
-      padding: 3px;
-      cursor: pointer;
+.user {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  display: flex;
+  justify-content: right;
+  gap: 10px;
+  width: 200px;
+  color: white;
+  font-weight: bold;
+
+  p {
+    background-color: rgb(0, 0, 0, 0.5);
+    padding: 3px;
+    cursor: pointer;
+    margin-top: 5px;
+  }
+}
+
+button {
+  background: rgb(255, 255, 255, 0.2);
+  border: 1px solid white;
+  color: white;
+  border-radius: 3px;
+  padding: 3px 5px;
+  margin-top: 5px;
+  cursor: pointer;
+}
+
+.loginHide {
+  top: -23px;
+}
+
+.show-login-btn {
+  top: 10px;
+  right: 10px;
+}
+
+.mobile {
+  display: none;
+}
+
+@media (min-width: 501px) and (max-width: 900px) {
+  .login {
+    form {
+      width: auto;
+      flex-direction: column;
+      align-items: flex-end;
+      button {
+        width: 80%;
+      }
     }
+
+    .close {
+      top: 61px;
+      right: 124px;
+    }
+  }
+  .loginHide {
+    top: -60px;
+  }
+}
+
+@media (max-width: 500px) {
+  .login {
+    position: absolute;
+    top: 44px;
+    left: calc((100vw - 200px) / 2);
+    width: 200px;
+    transition: all 0.8s ease-in-out;
+
+    form {
+      border: 1px solid gray;
+      background: rgb(245, 245, 245, 0.98);
+      padding: 20px;
+      flex-direction: column;
+      width: 200px;
+
+      input {
+        width: 100%;
+        text-align: center;
+      }
+    }
+    button {
+      color: gray;
+      border: 1px solid gray;
+      background: whitesmoke;
+    }
+
+    .close {
+      color: gray;
+      top: -5px;
+      right: 0;
+    }
+  }
+
+  .loginHide {
+    opacity: 0;
+    transform: scale(3);
+    // left: 100vh;
+    top: -250px;
+  }
+
+  .show-login-btn {
+    position: absolute;
+    top: 12px;
+    right: 18px;
+  }
+
+  .mobile {
+    display: block;
+  }
+
+  .desktop {
+    display: none;
   }
 }
 </style>

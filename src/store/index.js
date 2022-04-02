@@ -7,15 +7,21 @@ export default createStore({
   state: {
     schedule: {},
     username: "",
-    messages: null,
+    messages: {},
     chatUsername: null,
     showMessages: false,
+    showUsers: false,
+    showLightbox: false,
+    lightboxIndex: 0,
+    scrollPosition: 0,
+    users: {},
+    images: [],
   },
   getters: {
-    getSchedule: (state) => {
+    schedule: (state) => {
       return state.schedule;
     },
-    getScheduleById: (state) => (id) => {
+    scheduleById: (state) => (id) => {
       let note = null;
       Object.entries(state.schedule).forEach(([key, value]) => {
         value.forEach((item) => {
@@ -27,17 +33,35 @@ export default createStore({
       return note;
     },
 
-    getUsername: (state) => {
+    username: (state) => {
       return state.username;
     },
-    getMessages: (state) => {
+    messages: (state) => {
       return state.messages;
     },
-    getChatUsername: (state) => {
+    chatUsername: (state) => {
       return state.chatUsername;
     },
-    getShowMessages: (state) => {
+    showMessages: (state) => {
       return state.showMessages;
+    },
+    users: (state) => {
+      return state.users;
+    },
+    showUsers: (state) => {
+      return state.showUsers;
+    },
+    showLightbox: (state) => {
+      return state.showLightbox;
+    },
+    scrollPosition: (state) => {
+      return state.scrollPosition;
+    },
+    lightboxIndex: (state) => {
+      return state.lightboxIndex;
+    },
+    images: (state) => {
+      return state.images;
     },
   },
   actions: {
@@ -49,19 +73,14 @@ export default createStore({
         console.log(e.message);
       }
     },
-    // async fetchMessages({ commit }) {
-    //   try {
-    //     const conf = {
-    //       headers: {
-    //         "x-aut-token": localStorage.getItem("x-auth-token"),
-    //       },
-    //     };
-    //     const result = await axios.get(`${config.host}api/messages`, conf);
-    //     commit("addMessages", result.data);
-    //   } catch (e) {
-    //     console.log(e.message);
-    //   }
-    // },
+    async fetchImages({ commit }) {
+      try {
+        const result = await axios.get(`${config.host}api/images`);
+        commit("addImages", result.data);
+      } catch (e) {
+        console.log("fetchImage error -> " + e.message);
+      }
+    },
     async addToSchedule({ commit }, data) {
       try {
         data.date.setHours(0, 0, 0, 0);
@@ -72,14 +91,14 @@ export default createStore({
         const result = await axios.post(`${config.host}api/schedule`, day);
         commit("addToSchedule", result.data);
       } catch (e) {
-        console.log("addToSchedule Error -> " + e);
+        console.log("addToSchedule error -> " + e.message);
       }
     },
     async editNote({ commit }, note) {
       try {
         const result = await axios.put(`${config.host}api/schedule`, note);
       } catch (e) {
-        console.log("editSchedule Error -> " + e);
+        console.log("editNote error -> " + e);
       }
     },
     async deleteFromSchedule({ commit }, id) {
@@ -88,14 +107,13 @@ export default createStore({
           const result = await axios.delete(`${config.host}api/schedule/${id}`);
           commit("deleteFromSchedule", id);
         } catch (e) {
-          console.log(`deleteFromSchedule error -> ${e}`);
+          console.log(`deleteFromSchedule error -> ${e.message}`);
         }
       }
     },
     async login({ commit, dispatch }, loginData) {
       try {
         const result = await axios.post(`${config.host}api/auth`, loginData);
-        console.log(`user ${result.data.username} is logged in`);
         const token = result.headers["x-auth-token"];
         localStorage.setItem("x-auth-token", token);
         localStorage.setItem("username", result.data.username);
@@ -107,7 +125,7 @@ export default createStore({
         io.connect();
       } catch (e) {
         if (e.request != undefined) {
-          // console.log("response :" + e.request.response);
+          console.log("response :" + e.request.response);
           throw e;
         } else {
           console.log(e);
@@ -119,10 +137,10 @@ export default createStore({
       commit("addMessages", null);
       commit("setShowMessages", false);
       commit("setChatUsername", null);
-
       localStorage.removeItem("x-auth-token");
       delete axios.defaults.headers.post["x-auth-token"];
       delete axios.defaults.headers.delete["x-auth-token"];
+      delete axios.defaults.headers.put["x-auth-token"];
       io.auth.token = null;
       io.close();
     },
@@ -147,11 +165,17 @@ export default createStore({
         state.schedule[note.date] = [note];
       }
     },
+    addImages(state, images) {
+      images.forEach((image) => {
+        let uri = String(image).slice(-9);
+        state.images.push(`${config.host}${uri}`);
+      });
+    },
     setUsername(state, username) {
       state.username = username;
     },
     editSchedule(state, note) {
-      let noteInSchedule = this.getScheduleById(note.id);
+      let noteInSchedule = this.scheduleById(note.id);
       noteInSchedule.text = note.tex;
     },
     deleteFromSchedule(state, id) {
@@ -186,9 +210,41 @@ export default createStore({
     },
     setChatUsername(state, username) {
       state.chatUsername = username;
+      if (state.chatUsername != null) {
+        state.showSchedule = false;
+      }
     },
     setShowMessages(state, show) {
       state.showMessages = show;
+      if (state.showMessages == true) {
+        state.showSchedule = false;
+      }
+    },
+    addUsers(state, users) {
+      state.users = users;
+    },
+    updateUserStatus(state, data) {
+      try {
+        console.log("update status 4 " + data.username + " : " + data.status);
+        const index = state.users.findIndex(
+          (user) => user.username === data.username
+        );
+        state.users[index].isConnected = data.status;
+      } catch (e) {
+        console.log(e.message);
+      }
+    },
+    setShowUsers(state, show) {
+      state.showUsers = show;
+    },
+    setShowLightbox(state, show) {
+      state.showLightbox = show;
+    },
+    setscrollPosition(state, position) {
+      state.scrollPosition = position;
+    },
+    setLightboxIndex(state, index) {
+      state.lightboxIndex = index;
     },
   },
 });

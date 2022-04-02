@@ -8,7 +8,12 @@
       </tr>
       <tr>
         <td v-for="day in forecast" key="day.dt">
-          {{ calcTemp(day.main.temp) }}
+          {{ calcTemp(day.main.temp) }}°
+        </td>
+      </tr>
+      <tr>
+        <td v-for="day in forecast" key="day.dt">
+          <img :src="getIconUrl(day.weather[0].icon)" alt="" />
         </td>
       </tr>
       <tr>
@@ -30,6 +35,9 @@ export default {
     calcTemp(tempK) {
       return Math.round(Number(tempK) - 273.15);
     },
+    getIconUrl(icon) {
+      return `http://openweathermap.org/img/w/${icon}.png`;
+    },
   },
 };
 </script>
@@ -39,7 +47,7 @@ export default {
   width: 100%;
   margin-top: 10px;
   text-align: left;
-  transition: all 0.5s ease-in-out;
+  transition: all 1s ease-in-out;
 
   table {
     transition: all 0.5s ease-in-out;

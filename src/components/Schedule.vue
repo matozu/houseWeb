@@ -1,73 +1,101 @@
 <template>
-  <div class="schedule">
-    <button-glow
-      :text="show ? 'Hide Schedule' : 'Show Schedule'"
-      @click="show = !show"
-    />
-    <div :class="['notes', { 'notes-show': show }]">
-      <div class="day" v-for="(day, index) in getSchedule">
-        <div class="day-date">
-          {{ new Date(index).getDate() }}. {{ new Date(index).getMonth() + 1 }}.
-          {{ new Date(index).getFullYear() }}.
-        </div>
+  <div class="schedule" id="schedule">
+    <transition-group>
+      <button-normal
+        key="buttonNormal"
+        v-if="username"
+        text="Pick a Date"
+        @click="showDatePicker = !showDatePicker"
+      />
 
-        <div class="note" v-for="note in day">
-          <div class="note-header">
-            <span class="note-username">{{ note.username }} :</span>
-            <span class="note-icons">
-              <i
-                @click="save(note._id)"
-                v-if="getUsername === note.username && editableId === note._id"
-                class="fa fa-save"
-              ></i>
+      <DatePicker
+        key="datePicker"
+        v-if="showDatePicker && username"
+        v-model="date"
+        color="blue"
+        is-dark
+      />
 
-              <i
-                @click="cancel(note._id)"
-                v-if="getUsername === note.username && editableId === note._id"
-                class="fa fa-times"
-              ></i>
+      <ScheduleInputForm
+        key="scheduleInputForm"
+        v-if="date && username"
+        :date="date"
+        @close-form="date = null"
+      />
+      <div class="notes" key="notes">
+        <div class="day" v-for="(day, index) in schedule">
+          <div class="day-date">
+            {{ new Date(index).getDate() }}.
+            {{ new Date(index).getMonth() + 1 }}.
+            {{ new Date(index).getFullYear() }}.
+          </div>
 
-              <i
-                @click="editInSchedule(note._id)"
-                v-if="getUsername === note.username && editableId != note._id"
-                class="fa fa-edit"
-              ></i>
-              <i
-                @click="deleteFromSchedule(note._id)"
-                v-if="getUsername === note.username"
-                class="fa fa-trash"
-              ></i>
+          <div class="note" v-for="note in day">
+            <div class="note-header">
+              <span class="note-username">{{ note.username }} :</span>
+              <span class="note-icons">
+                <i
+                  @click="save(note._id)"
+                  v-if="username === note.username && editableId === note._id"
+                  class="fa fa-save"
+                ></i>
+
+                <i
+                  @click="cancel(note._id)"
+                  v-if="username === note.username && editableId === note._id"
+                  class="fa fa-times"
+                ></i>
+
+                <i
+                  @click="editInSchedule(note._id)"
+                  v-if="username === note.username && editableId != note._id"
+                  class="fa fa-edit"
+                ></i>
+                <i
+                  @click="deleteFromSchedule(note._id)"
+                  v-if="username === note.username"
+                  class="fa fa-trash"
+                ></i>
+              </span>
+            </div>
+            <span class="note-text" :id="note._id">
+              {{ note.text.replace(/&nbsp;/g, " ") }}
             </span>
           </div>
-          <span class="note-text" :id="note._id">
-            {{ note.text.replace(/&nbsp;/g, " ") }}
-          </span>
         </div>
       </div>
-    </div>
+    </transition-group>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
-import ButtonGlow from "../components/ButtonGlow.vue";
+import { DatePicker } from "v-calendar";
+import ButtonNormal from "./ButtonNormal.vue";
+import ScheduleInputForm from "./calendar/ScheduleInputForm.vue";
+import { mapGetters, mapActions, mapMutations } from "vuex";
+
 export default {
   name: "Schedule",
   components: {
-    ButtonGlow,
+    DatePicker,
+    ButtonNormal,
+    ScheduleInputForm,
   },
   data() {
     return {
+      date: null,
       show: false,
+      showDatePicker: false,
       editableId: null,
       oldText: "",
     };
   },
   computed: {
-    ...mapGetters(["getSchedule", "getUsername"]),
+    ...mapGetters(["schedule", "username", "getShowSchedule"]),
   },
   methods: {
     ...mapActions(["deleteFromSchedule", "editNote"]),
+    ...mapMutations(["setShowSchedule"]),
     editInSchedule(id) {
       const el = document.getElementById(id);
       el.contentEditable = true;
@@ -103,32 +131,23 @@ export default {
 
 <style scoped lang="scss">
 .schedule {
+  margin: auto;
+  margin-top: 20px;
+  margin-bottom: 0;
   display: flex;
   width: 100%;
-  height: 100%;
-  justify-content: left;
+  flex-direction: column;
   align-items: center;
 }
 
 .notes {
-  border: 1px solid white;
   position: relative;
-  width: 100%;
-  max-height: 90%;
-  padding-left: 10px;
-  padding-right: 10px;
-  overflow: auto;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  scroll-behavior: smooth;
-  margin-right: 20px;
-  margin-top: 55px;
-  transition: all 0.5s ease-in-out;
-  transform: scale(0);
-}
-
-.notes-show {
-  transform: scale(1);
+  max-width: 1200px;
+  -moz-transition: all 0.5s;
+  -ms-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
 }
 
 .day {
@@ -175,5 +194,38 @@ export default {
 .day-date {
   font-weight: bold;
   text-align: center;
+}
+
+.v-enter-from {
+  opacity: 0;
+  transform: translateY(-150px) scale(0);
+}
+
+.v-enter-active {
+  transition: all 0.5s ease-in;
+}
+
+.v-enter-to {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.v-leave-from {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.v-leave-active {
+  transition: all 0.5s ease-in;
+  position: absolute;
+}
+
+.v-leave-to {
+  opacity: 0;
+  transform: translateY(-150px) scale(0);
+}
+
+.v-move {
+  transition: transform 0.5s ease;
 }
 </style>

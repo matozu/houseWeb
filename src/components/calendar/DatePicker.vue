@@ -1,47 +1,36 @@
 <template>
-  <div v-show="getUsername != ''" class="calendar">
-    <div
-      :class="['date-picker-container', { 'date-picker-show': showCalendar }]"
-    >
-      <!-- <div class="date-picker-close" @click="showCalendar = false"></div> -->
-      <DatePicker v-model="date" class="date-picker" color="blue" is-dark />
-    </div>
-
-    <button-glow
-      @click="showCalendar = !showCalendar"
-      :text="showCalendar ? 'Close Calendar' : 'Show Calendar'"
-    />
-  </div>
-  <ScheduleInputForm
-    :date="date"
-    :style="date ? 'transform: scale(1)' : 'transform: scale(0)'"
-    @close-form="date = null"
-  />
+  <button-normal text="Pick a Date" @click="showDatePicker = !showDatePicker" />
+  <transition>
+    <DatePicker v-model="date" v-show="showDatePicker" color="blue" is-dark />
+  </transition>
+  <transition>
+    <ScheduleInputForm v-show="date" :date="date" @close-form="date = null" />
+  </transition>
 </template>
 
 <script>
 import { DatePicker } from "v-calendar";
-import ButtonGlow from "../ButtonGlow.vue";
+import ButtonNormal from "../ButtonNormal.vue";
 import ScheduleInputForm from "./ScheduleInputForm.vue";
 import { mapGetters, mapMutations } from "vuex";
 export default {
   components: {
     DatePicker,
+    ButtonNormal,
     ScheduleInputForm,
-    ButtonGlow,
   },
   data() {
     return {
       date: null,
-      showCalendar: false,
+      showDatePicker: false,
     };
   },
   computed: {
-    ...mapGetters(["getUsername"]),
+    ...mapGetters(["username"]),
   },
   watch: {
-    showCalendar: function (val) {
-      if (!val) {
+    showDatePicker(newValue) {
+      if (!newValue) {
         this.date = null;
       }
     },
@@ -50,49 +39,20 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.calendar {
-  display: flex;
-  align-items: center;
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+  transform: translateY(-150px) scale(0);
 }
 
-.date-picker-container {
-  display: inline-block;
-  transition: all 0.5s ease-in-out;
-  transform: scale(0);
+.v-enter-active,
+.v-leave-active {
+  transition: all 10s ease-in-out;
 }
 
-.date-picker {
-  position: relative;
-}
-
-.date-picker-close {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: -12px;
-  right: -12px;
-  z-index: 1;
-  width: 25px;
-  height: 25px;
-  background: white;
-  border-radius: 100%;
-  border: 1px solid black;
-  cursor: pointer;
-}
-
-.date-picker-close::after {
-  display: inline-block;
-  content: "\00d7";
-  font-size: 1.5em;
-  color: gray;
-}
-
-.date-picker-close:hover::after {
-  font-weight: bold;
-}
-
-.date-picker-show {
-  transform: scale(1);
+.v-enter-to,
+.v-leave-from {
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
 </style>

@@ -1,14 +1,12 @@
 <template>
   <div class="input">
     <form action="">
-      <div v-if="date" class="form-date">
+      <div class="form-date">
         {{ String(date.getDate()).padStart(2, "0") }}
         {{ String(date.getMonth() + 1).padStart(2, "0") }}
         {{ date.getFullYear() }}
       </div>
-
       <textarea name="form-text" v-model="text" class="form-text"></textarea>
-
       <button class="form-btn" @click.prevent="save()">Save</button>
       <button @click.prevent="$emit('close-form')">Close</button>
     </form>
@@ -24,7 +22,10 @@ export default {
     };
   },
   props: {
-    date: Date,
+    date: {
+      type: Date,
+      required: true,
+    },
   },
   methods: {
     ...mapActions(["addToSchedule"]),
@@ -41,11 +42,7 @@ export default {
 
 <style scoped lang="scss">
 .input {
-  position: absolute;
-  bottom: 10px;
   width: 100%;
-  left: 0;
-  // background: rgb(222, 184, 135, 0.5);
   padding: 15px;
   text-align: center;
   transition: all 0.5s ease-out;
@@ -67,7 +64,7 @@ export default {
     margin: auto;
     background-color: rgb(255, 255, 255, 0.8);
     text-align: center;
-    border: none;
+    border: 1px solid black;
     padding: 10px;
     border-radius: 5px;
   }

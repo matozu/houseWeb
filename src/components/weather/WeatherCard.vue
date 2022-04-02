@@ -29,8 +29,9 @@
       ></div>
     </div>
     <div style="clear: both"></div>
-
-    <forecast v-show="showForecast" :forecast="weather.forecast" />
+    <transition>
+      <forecast v-show="showForecast" :forecast="weather.forecast" />
+    </transition>
   </div>
 </template>
 
@@ -131,13 +132,12 @@ export default {
 <style lang="scss" scoped>
 .card {
   position: relative;
-  // width: 300px;
   border: 1px solid gray;
   border-radius: 5px;
   margin: 30px auto;
   padding: 20px;
   background: rgb(220, 220, 220, 0.6);
-  transition: all 0.5s ease-in-out;
+  // transition: all 2s ease-in-out;
 }
 
 .header-left {
@@ -227,5 +227,25 @@ export default {
 
 .circle:hover::after {
   font-weight: bold;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+  max-height: 0;
+  transform: scale(0);
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: all 0.5s ease-in;
+  overflow: hidden;
+}
+
+.v-enter-to,
+.v-leave-from {
+  opacity: 1;
+  max-height: 800px;
+  transform: scale(1);
 }
 </style>

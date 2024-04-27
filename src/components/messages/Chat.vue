@@ -2,7 +2,7 @@
   <div class="chat-container" v-show="chatUsername">
     <div class="chat-header">
       <span>{{ username }}&nbsp;&larr;&rarr;&nbsp;{{ chatUsername }}</span>
-      <i class="fa fa-close" @click="setChatUsername(null)"></i>
+      <i class="fa fa-close" @click="emit('close-menu')"></i>
     </div>
     <div class="chat" id="chatDiv">
       <div

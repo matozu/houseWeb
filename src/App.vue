@@ -12,7 +12,8 @@
     <schedule />
     <image-gallery />
     <div class="footer">
-      Copyright &copy; 2022 by mato
+      Copyright &copy; 2022 by
+      <a href="https://matozu.github.io">mato</a>
       <br />
       All rights reserved
     </div>
@@ -63,6 +64,7 @@ export default {
 * {
   box-sizing: border-box;
   margin: 0;
+  text-decoration: none;
 }
 
 ::-webkit-scrollbar {

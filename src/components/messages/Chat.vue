@@ -1,5 +1,5 @@
 <template>
-  <div class="chat-container" v-show="chatUsername">
+  <div class="chat-container" v-if="chatUsername">
     <div class="chat-header">
       <span>{{ username }}&nbsp;&larr;&rarr;&nbsp;{{ chatUsername }}</span>
       <i class="fa fa-close" @click="setChatUsername(null)"></i>
@@ -61,11 +61,14 @@ export default {
   },
   mounted() {
     var self = this;
-    this.$refs.chatInputField.addEventListener("keyup", function (event) {
-      if (event.code === "Enter" || event.code === "NumpadEnter") {
-        self.sendMessage();
-      }
-    });
+    console.warn("mounted : ", this.$el);
+    if (this.chatUsername) {
+      this.$refs.chatInputField.addEventListener("keyup", function (event) {
+        if (event.code === "Enter" || event.code === "NumpadEnter") {
+          self.sendMessage();
+        }
+      });
+    }
   },
   updated() {
     const chatDiv = document.getElementById("chatDiv");

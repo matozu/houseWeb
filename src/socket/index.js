@@ -16,7 +16,7 @@ socketIO.on("connect_error", (error) => {
 socketIO.on("connected", (data) => {
   store.commit(
     "addMessages",
-    groupMessages(data.messages, store.state.username)
+    groupMessages(data.messages, localStorage.getItem("username"))
   );
   store.commit("addUsers", data.users);
 });

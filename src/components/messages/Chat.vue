@@ -61,7 +61,6 @@ export default {
   },
   mounted() {
     var self = this;
-    console.warn("mounted : ", this.$el);
     if (this.chatUsername) {
       this.$refs.chatInputField.addEventListener("keyup", function (event) {
         if (event.code === "Enter" || event.code === "NumpadEnter") {

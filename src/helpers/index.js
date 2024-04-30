@@ -8,7 +8,6 @@ export const groupBy = (items, key) =>
   );
 
 export const groupMessages = (messages, username) => {
-  console.log(username);
   const result = {};
   messages.map((m) => {
     if (m.from != username) {

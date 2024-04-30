@@ -36,7 +36,7 @@ export default {
         data.date.setHours(0, 0, 0, 0);
         const day = {
           ...data,
-          username: this.state.username,
+          username: this.state.usersAndMessagesStore.username,
         };
         const result = await axios.post(`${config.host}api/schedule`, day);
         commit("addToSchedule", result.data);
@@ -52,7 +52,7 @@ export default {
       }
     },
     async deleteFromSchedule({ commit }, id) {
-      if (confirm("are you shure?")) {
+      if (confirm("are you sure?")) {
         try {
           const result = await axios.delete(`${config.host}api/schedule/${id}`);
           commit("deleteFromSchedule", id);

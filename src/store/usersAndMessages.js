@@ -105,7 +105,6 @@ export default {
     },
     updateUserStatus(state, data) {
       try {
-        console.log("update status 4 " + data.username + " : " + data.status);
         const index = state.users.findIndex(
           (user) => user.username === data.username
         );

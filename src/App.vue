@@ -1,5 +1,12 @@
 <template>
-  <div class="container">
+  <div
+    class="container"
+    ref="container"
+    :style="{
+      '--backgroundOffsetX': backgroundOffsetX,
+      '--backgroundOffsetY': backgroundOffsetY,
+    }"
+  >
     <login></login>
     <div class="showcase">
       <h1>house web</h1>
@@ -9,8 +16,8 @@
     </div>
     <messages />
     <chat />
-    <schedule />
-    <image-gallery />
+    <schedule @noteHovered="setBackgroundOffsetX" />
+    <image-gallery @imageHovered="setBackgroundOffsetY" />
     <div class="footer">
       Copyright &copy; 2022 by
       <a href="https://matozu.github.io">mato</a>
@@ -41,9 +48,21 @@ export default {
     Schedule,
     ImageGallery,
   },
+  data() {
+    return {
+      backgroundOffsetX: 0,
+      backgroundOffsetY: 0,
+    };
+  },
   methods: {
     ...mapActions(["fetchSchedule", "fetchImages"]),
     ...mapMutations(["setUsername"]),
+    setBackgroundOffsetX(offset) {
+      this.backgroundOffsetX = offset;
+    },
+    setBackgroundOffsetY(offset) {
+      this.backgroundOffsetY = offset;
+    },
   },
   created() {
     this.fetchSchedule();
@@ -86,22 +105,32 @@ body {
   padding: 10px;
   position: relative;
   width: 100vw;
-  height: 100vh;
+  height: auto;
   margin: auto;
-  background-color: aqua;
-  background-image: url("assets/img/2.jpg");
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
+  background-image: radial-gradient(
+    rgba(128, 128, 128, 0.1) 2%,
+    transparent 8%
+  );
+  background-size: 10vmin 10vmin;
+  background-color: whitesmoke;
+  transition: background-position 1s ease;
+  background-position: calc(-10% * var(--backgroundOffsetY))
+    calc(-5% * var(--backgroundOffsetX));
 }
 
 .showcase {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  background-image: url("assets/img/2.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  margin-top: -10px;
+  margin-left: -10px;
 
   h1 {
     color: whitesmoke;

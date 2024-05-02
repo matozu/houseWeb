@@ -7,6 +7,7 @@
       class="image"
       :src="image"
       alt=""
+      @mouseenter="emitImageHovered(index)"
     />
   </div>
   <div class="images-footer"></div>
@@ -20,6 +21,7 @@ export default {
   components: {
     Lightbox,
   },
+  emits: ["imageHovered"],
   computed: {
     ...mapGetters(["images"]),
   },
@@ -35,6 +37,9 @@ export default {
       this.setscrollPosition(
         document.documentElement.scrollTop || document.body.scrollTop
       );
+    },
+    emitImageHovered(index) {
+      this.$emit("imageHovered", index);
     },
   },
 };

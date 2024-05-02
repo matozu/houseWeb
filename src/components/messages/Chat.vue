@@ -80,7 +80,7 @@ export default {
 
 <style scoped lang="scss">
 .chat-container {
-  position: absolute;
+  position: fixed;
   bottom: 10px;
   right: 1vw;
   max-width: 300px;
@@ -88,6 +88,7 @@ export default {
   background: rgb(255, 255, 255, 0.1);
   border-radius: 5px;
   padding: 10px;
+  z-index: 2;
 }
 
 .chat {

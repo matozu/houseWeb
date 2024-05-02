@@ -108,6 +108,7 @@ export default {
   position: absolute;
   z-index: 1;
   margin-left: -10px;
+  margin-top: -10px;
   width: 100vw;
   height: 100vh;
   padding: 30px;

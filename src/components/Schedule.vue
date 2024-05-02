@@ -1,5 +1,5 @@
 <template>
-  <div class="schedule" id="schedule">
+  <div class="schedule" id="schedule" ref="schedule">
     <transition-group>
       <button-normal
         key="buttonNormal"
@@ -30,7 +30,11 @@
             {{ new Date(index).getFullYear() }}.
           </div>
 
-          <div class="note" v-for="note in day">
+          <div
+            class="note"
+            v-for="note in day"
+            @mouseenter="emitNoteHovered(note._id)"
+          >
             <div class="note-header">
               <span class="note-username">{{ note.username }} :</span>
               <span class="note-icons">
@@ -92,10 +96,19 @@ export default {
   },
   computed: {
     ...mapGetters(["schedule", "username", "getShowSchedule"]),
+    notesArray() {
+      return Array.from(document.querySelectorAll(".note"));
+    },
   },
   methods: {
     ...mapActions(["deleteFromSchedule", "editNote"]),
     ...mapMutations(["setShowSchedule"]),
+    emitNoteHovered(id) {
+      const index = this.notesArray.findIndex(
+        (note) => note.querySelector(".note-text").id === id
+      );
+      this.$emit("noteHovered", index);
+    },
     editInSchedule(id) {
       const el = document.getElementById(id);
       el.contentEditable = true;
@@ -153,14 +166,13 @@ export default {
 .day {
   margin: 10px auto;
   padding: 10px;
-  background: rgb(95, 158, 160, 0.8);
   border-radius: 5px;
 }
 
 .note {
   position: relative;
   border: 1px solid black;
-  background: rgb(95, 158, 160, 0.3);
+  background: rgba(212, 237, 237, 0.3);
   border-radius: 10px;
   margin: 10px;
   padding: 10px;

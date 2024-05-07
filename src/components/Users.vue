@@ -5,7 +5,10 @@
         <i class="fa fa-close" @click="setShowUsers(false)"></i>
         <div
           :class="['user', user.isConnected ? 'user-online' : '']"
-          @click="setChatUsername(user.username)"
+          @click="
+            setChatUsername(user.username);
+            setShowUsers(false);
+          "
           v-for="user in users"
         >
           {{ user.username }}
@@ -34,7 +37,7 @@ export default {
   justify-content: center;
   align-items: center;
   position: absolute;
-  height: 100%;
+  height: 80%;
   width: 100%;
 }
 
@@ -79,7 +82,6 @@ export default {
 
 .v-enter-from,
 .v-leave-to {
-  // top: -60%;
   opacity: 0;
   transform: scale(1.5);
 }
@@ -87,6 +89,7 @@ export default {
 .v-enter-active,
 .v-leave-active {
   transition: all 0.8s ease-in-out;
+  z-index: 3;
 }
 
 .v-enter-to,
@@ -98,7 +101,7 @@ export default {
 @media (max-width: 800px) {
   .users {
     width: 60%;
-    z-index: 1;
+    z-index: 3;
   }
 }
 </style>

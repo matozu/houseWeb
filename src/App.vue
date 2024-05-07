@@ -13,6 +13,7 @@
       <WeatherCard />
       <a href="#schedule"><div class="scroll-to-schedule-icon"></div></a>
       <users />
+      <registration />
     </div>
     <messages />
     <chat />
@@ -20,7 +21,7 @@
     <image-gallery @imageHovered="setBackgroundOffsetY" />
     <div class="footer">
       Copyright &copy; 2022 by
-      <a href="https://matozu.github.io">mato</a>
+      <a href="https://github.com/matozu" target="_blank">mato</a>
       <br />
       All rights reserved
     </div>
@@ -37,6 +38,7 @@ import Chat from "./components/messages/Chat.vue";
 import Users from "./components/Users.vue";
 import Schedule from "./components/Schedule.vue";
 import ImageGallery from "./components/images/ImageGallery.vue";
+import Registration from "./components/Registration.vue";
 
 export default {
   components: {
@@ -47,6 +49,7 @@ export default {
     Users,
     Schedule,
     ImageGallery,
+    Registration,
   },
   data() {
     return {
@@ -102,6 +105,7 @@ body {
 }
 
 .container {
+  overflow-x: hidden;
   padding: 10px;
   position: relative;
   width: 100vw;

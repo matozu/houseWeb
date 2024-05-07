@@ -3,9 +3,9 @@
     
     <div class="image-container">
         <div class="close" @click="hide">&times;</div>
-      <div class="prev" ><span @click.stop="prev" v-show="hasPrev">&#10094</span></div>
+      <div class="prev" @click.stop="prev" v-show="hasPrev"><span >&#10094</span></div>
       <img class="image" :src="images[lightboxIndex]" alt="" @click.stop=""/>
-      <div class="next" ><span @click.stop="next" v-show="hasNext">&#10095</span></div>
+      <div class="next" @click.stop="next" v-show="hasNext" ><span >&#10095</span></div>
     </div>
   </div>
 </template>
@@ -110,13 +110,14 @@ export default {
   margin-left: -10px;
   margin-top: -10px;
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh + 10px);
   padding: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
   border: 1px solid black;
   background: rgb(0, 0, 0, 0.9);
+  justify-content: center;
 }
 
 .close {
@@ -141,7 +142,10 @@ export default {
   font-size: 3rem;
   color: gray;
   cursor: pointer;
-  width: 32px;
+  width: 45%;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 .prev {
   position: absolute;
@@ -151,6 +155,7 @@ export default {
 .next {
   position: absolute;
   right: 5px;
+  justify-content: right;
 }
 .image {
   width: auto;
@@ -179,7 +184,6 @@ export default {
   .prev,
   .next {
     font-size: 2rem;
-    width: 20px;
   }
 
   .close {

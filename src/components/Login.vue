@@ -1,5 +1,7 @@
 <template>
   <div :class="{ login: true, loginHide: !showLoginInput }">
+    <span class="register" @click="toggleShowRegistration()">register</span>
+
     <form @submit="loginFormSubmit" v-show="username === ''">
       <input
         type="text"
@@ -83,7 +85,7 @@ export default {
   },
   methods: {
     ...mapActions(["login", "logout"]),
-    ...mapMutations(["setShowMessages"]),
+    ...mapMutations(["setShowMessages", "toggleShowRegistration"]),
     async loginFormSubmit(e) {
       e.preventDefault();
       const usernameInputField = document.getElementById("username");
@@ -123,6 +125,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.register {
+  color: white;
+  background: rgba($color: black, $alpha: 0.5);
+  right: 10px;
+  position: absolute;
+  left: 15px;
+  top: 32px;
+  width: fit-content;
+  padding: 5px;
+  transition: all 0.8s ease-out;
+  cursor: pointer;
+}
+
 .login {
   position: absolute;
   top: 10px;
@@ -184,6 +199,11 @@ button {
 
 .loginHide {
   top: -23px;
+
+  .register {
+    opacity: 0;
+    transform: scaleZ(0) translateY(-30px);
+  }
 }
 
 .show-login-btn {

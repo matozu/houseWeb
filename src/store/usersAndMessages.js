@@ -10,6 +10,7 @@ export default {
     showMessages: false,
     showUsers: false,
     users: {},
+    showRegistration: false,
   },
   getters: {
     username: (state) => {
@@ -30,8 +31,21 @@ export default {
     showUsers: (state) => {
       return state.showUsers;
     },
+    showRegistration: (state) => {
+      return state.showRegistration;
+    },
   },
   actions: {
+    async register({ commit }, registerData) {
+      try {
+        const result = await axios.post(
+          `${config.host}api/register`,
+          registerData
+        );
+      } catch (error) {
+        throw error;
+      }
+    },
     async login({ commit, dispatch }, loginData) {
       try {
         const result = await axios.post(`${config.host}api/auth`, loginData);
@@ -115,6 +129,10 @@ export default {
     },
     setShowUsers(state, show) {
       state.showUsers = show;
+    },
+
+    toggleShowRegistration(state) {
+      state.showRegistration = !state.showRegistration;
     },
   },
 };
